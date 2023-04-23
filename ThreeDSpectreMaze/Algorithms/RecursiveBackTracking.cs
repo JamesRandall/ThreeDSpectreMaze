@@ -15,7 +15,7 @@ public static class RecursiveBackTracking
             {
                 var next = position + Directions.Vector[direction];
                 var oppositeDirection = Directions.Opposite[direction];
-                if (next.InBounds(width,height) && map[next.y,next.x] == 0)
+                if (next.WithinBounds(width,height) && map[next.y,next.x] == Direction.None)
                 {
                     map[position.y,position.x] |= direction;
                     map[next.y, next.x] |= oppositeDirection;
@@ -25,7 +25,7 @@ public static class RecursiveBackTracking
             }
         }
         
-        Walk(MapVector.Zero);
+        Walk(new MapVector(random.Next(width), random.Next(height)));
 
         return map;
     }

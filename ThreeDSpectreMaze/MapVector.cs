@@ -7,5 +7,5 @@ public readonly record struct MapVector(int x, int y)
     public bool IsValid => x >= 0 && y >= 0;
     public static readonly MapVector Invalid = new MapVector(-1, -1);
     public static readonly MapVector Zero = new MapVector(0, 0);
-    public bool InBounds(int width, int height) => x >= 0 && y >= 0 && x < width && y < height;
+    public bool WithinBounds(int width, int height) => x >= 0 && y >= 0 && x < width && y < height;
 }

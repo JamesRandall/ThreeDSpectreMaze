@@ -23,7 +23,7 @@ public class Game
 
     private Direction Facing { get; set; } = Direction.N;
 
-    private bool IsValidPosition(MapVector position) => position.InBounds(_mapWidth, _mapHeight);
+    private bool IsValidPosition(MapVector position) => position.WithinBounds(_mapWidth, _mapHeight);
 
     private MapVector GetValidRandomPosition()
     {

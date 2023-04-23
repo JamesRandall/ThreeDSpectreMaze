@@ -17,7 +17,8 @@ public static class HuntAndKill
         
         Direction[] GetPossibleDirections(MapVector position, LookingFor lookingFor)
         {
-            bool IsValid(Direction value) => lookingFor == LookingFor.Touched ? value != 0 : value == 0;
+            bool IsValid(Direction value) =>
+                lookingFor == LookingFor.Touched ? value != Direction.None : value == Direction.None;
             var cx = position.x;
             var cy = position.y;
             
