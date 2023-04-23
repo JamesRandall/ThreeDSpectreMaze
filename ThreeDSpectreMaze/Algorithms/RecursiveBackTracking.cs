@@ -4,7 +4,7 @@ public static class RecursiveBackTracking
 {
     public static int[,] Algorithm(int width, int height, Action<int[,]>? observer = null)
     {
-        observer = observer ?? (_ => { });
+        observer ??= _ => { };
         
         var map = new int[height, width];
         var random = new Random(Environment.TickCount);

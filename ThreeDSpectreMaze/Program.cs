@@ -1,10 +1,34 @@
-﻿using ThreeDSpectreMaze;
+﻿using Spectre.Console;
+using ThreeDSpectreMaze;
 using ThreeDSpectreMaze.Algorithms;
 
+var algorithms = new Dictionary<string, Func<int, int, Action<int[,]>?, int[,]>>
+{
+    {"Recursive back tracking", RecursiveBackTracking.Algorithm},
+    {"Hunt and kill", HuntAndKill.Algorithm}
+};
+
+var algorithm =
+    algorithms[
+        AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Choose a maze generation algorithm")
+            .PageSize(10)
+            .AddChoices(algorithms.Keys))
+    ];
+var observe =
+    AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+            .Title("Observe maze generation")
+            .PageSize(10)
+            .AddChoices(new[] {"Yes", "No"}));
+
+AnsiConsole.Clear();
+
 var map =
-    args.Length == 1 && args[0].ToLower() == "--observe"
-        ? ConsoleObserver.ObserveCreation(RecursiveBackTracking.Algorithm)
-        : MapFactory.Create(RecursiveBackTracking.Algorithm);
+    observe == "Yes"
+        ? ConsoleObserver.ObserveCreation(algorithm)
+        : MapFactory.Create(algorithm);
 
 var game = new Game(map);
 game.Run();
