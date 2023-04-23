@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace ThreeDSpectreMaze.Algorithms;
+namespace ThreeDSpectreMaze;
 
 public static class Directions
 {
