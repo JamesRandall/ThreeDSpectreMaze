@@ -2,7 +2,7 @@
 using ThreeDSpectreMaze;
 using ThreeDSpectreMaze.Algorithms;
 
-var algorithms = new Dictionary<string, Func<int, int, Action<int[,]>?, int[,]>>
+var algorithms = new Dictionary<string, Func<int, int, Action<Direction[,]>?, Direction[,]>>
 {
     {"Recursive back tracking", RecursiveBackTracking.Algorithm},
     {"Hunt and kill", HuntAndKill.Algorithm}

@@ -8,16 +8,18 @@ public static class HuntAndKill
         Untouched
     };
     
-    public static int[,] Algorithm(int width, int height, Action<int[,]>? observer = null)
+    public static Direction[,] Algorithm(int width, int height, Action<Direction[,]>? observer = null)
     {
         observer ??= (_ => { });
         
-        var map = new int[height, width];
+        var map = new Direction[height, width];
         var random = new Random(Environment.TickCount);
         
-        Direction[] GetPossibleDirections(int cx, int cy, LookingFor lookingFor)
+        Direction[] GetPossibleDirections(MapVector position, LookingFor lookingFor)
         {
-            bool IsValid(int value) => lookingFor == LookingFor.Touched ? value != 0 : value == 0; 
+            bool IsValid(Direction value) => lookingFor == LookingFor.Touched ? value != 0 : value == 0;
+            var cx = position.x;
+            var cy = position.y;
             
             var north = cy > 0 && IsValid(map[cy - 1, cx]) ? new[] {Direction.N} : new Direction[] { };
             var east = cx < (width - 1) && IsValid(map[cy, cx + 1]) ? new[] {Direction.E} : new Direction[] { };
@@ -27,7 +29,7 @@ public static class HuntAndKill
             return possibleDirections;
         }
 
-        (int x, int y) Hunt()
+        MapVector Hunt()
         {
             for (var mapY = 0; mapY < height; mapY++)
             {
@@ -35,49 +37,48 @@ public static class HuntAndKill
                 {
                     if (map[mapY, mapX] == 0)
                     {
-                        var possibleDirections = GetPossibleDirections(mapX, mapY, LookingFor.Touched);
+                        var position = new MapVector(mapX, mapY);
+                        var possibleDirections = GetPossibleDirections(position, LookingFor.Touched);
                         if (possibleDirections.Any())
                         {
                             var direction = possibleDirections.MinBy(_ => random.Next());
-                            var nextX = mapX + Directions.X[direction];
-                            var nextY = mapY + Directions.Y[direction];
+                            var nextPosition = position + Directions.Vector[direction];
                             var oppositeDirection = Directions.Opposite[direction];
-                            map[mapY,mapX] |= (int)direction;
-                            map[nextY, nextX] |= (int)oppositeDirection;
+                            map[position.y, position.x] |= direction;
+                            map[nextPosition.y, nextPosition.x] |= oppositeDirection;
                             observer(map);
-                            return (mapX, mapY);
+                            return position;
                         }
                     }
                 }
             }
 
-            return (-1, -1);
+            return MapVector.Invalid;
         }
 
-        (int x, int y) Walk(int cx, int cy)
+        MapVector Walk(MapVector position)
         {
-            var possibleDirections = GetPossibleDirections(cx,cy,LookingFor.Untouched);
+            var possibleDirections = GetPossibleDirections(position,LookingFor.Untouched);
 
             if (possibleDirections.Any())
             {
                 var direction = possibleDirections.MinBy(_ => random.Next());
-                var nextX = cx + Directions.X[direction];
-                var nextY = cy + Directions.Y[direction];
+                var nextPosition = position + Directions.Vector[direction];
                 var oppositeDirection = Directions.Opposite[direction];
-                map[cy,cx] |= (int)direction;
-                map[nextY, nextX] |= (int)oppositeDirection;
+                map[position.y, position.x] |= direction;
+                map[nextPosition.y, nextPosition.x] |= oppositeDirection;
                 observer(map);
-                return (nextX, nextY);
+                return nextPosition;
             }
 
-            return (-1, -1);
+            return MapVector.Invalid;
         }
-        
-        var (x, y) = (random.Next(width),random.Next(height));
-        while (x >= 0 && y >= 0)
+
+        var position = new MapVector(random.Next(width), random.Next(height));
+        while (position.IsValid)
         {
-            (x, y) = Walk(x,y);
-            if (x == -1 && y == -1) (x, y) = Hunt();
+            position = Walk(position);
+            if (!position.IsValid) position = Hunt();
         }
 
         return map;

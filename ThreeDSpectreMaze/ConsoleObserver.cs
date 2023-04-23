@@ -6,19 +6,19 @@ namespace ThreeDSpectreMaze;
 public static class ConsoleObserver
 {
     public static ImmutableArray<ImmutableArray<Block>> ObserveCreation(
-        Func<int, int, Action<int[,]>?, int[,]> algorithm)
+        Func<int, int, Action<Direction[,]>?, Direction[,]> algorithm)
     {
         var map = ImmutableArray<ImmutableArray<Block>>.Empty;
         var canvas = new Canvas(Renderer.CanvasWidth, Renderer.CanvasHeight);
         var quit = false;
         AnsiConsole.Live(canvas).Start(ctx =>
         {
-            void Observe(int[,] mapInProgress)
+            void Observe(Direction[,] mapInProgress)
             {
                 if (!quit)
                 {
                     var inProgressMap = MapFactory.TransformToGrid(mapInProgress);
-                    Renderer.RenderOverhead(canvas, new IntVector2(-1, -1), inProgressMap);
+                    Renderer.RenderOverhead(canvas, new MapVector(-1, -1), inProgressMap);
                     ctx.Refresh();
                     Thread.Sleep(50);
                     while (Console.KeyAvailable)

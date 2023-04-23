@@ -11,15 +11,15 @@ public static class MapFactory
     const int Height = 17;
     
     public static ImmutableArray<ImmutableArray<Block>> Create(
-        Func<int, int, Action<int[,]>?, int[,]> algorithm,
-        Action<int[,]>? observer = null)
+        Func<int, int, Action<Direction[,]>?, Direction[,]> algorithm,
+        Action<Direction[,]>? observer = null)
     {
         var directionalMap = algorithm(Width, Height, observer);
         var gridMap = TransformToGrid(directionalMap);
         return gridMap;
     }
     
-    public static ImmutableArray<ImmutableArray<Block>> TransformToGrid(int[,] map)
+    public static ImmutableArray<ImmutableArray<Block>> TransformToGrid(Direction[,] map)
     {
         var topRow = Enumerable.Repeat(Block.Solid, Width * 2 + 1).ToList();
         var rows = new List<List<Block>>();
@@ -37,9 +37,9 @@ public static class MapFactory
             for (var x = 0; x < Width; x++)
             {
                 row1.Add(Block.Empty);
-                row1.Add((map[y, x] & (int)Direction.E) > 0 ? Block.Empty : Block.Solid);
+                row1.Add((map[y, x] & Direction.E) > 0 ? Block.Empty : Block.Solid);
                 
-                row2.Add((map[y, x] & (int)Direction.S) > 0 ? Block.Empty : Block.Solid);
+                row2.Add((map[y, x] & Direction.S) > 0 ? Block.Empty : Block.Solid);
                 row2.Add(Block.Solid);
             }
             rows.Add(row1);

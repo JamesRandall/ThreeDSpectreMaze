@@ -2,31 +2,30 @@ namespace ThreeDSpectreMaze.Algorithms;
 
 public static class RecursiveBackTracking
 {
-    public static int[,] Algorithm(int width, int height, Action<int[,]>? observer = null)
+    public static Direction[,] Algorithm(int width, int height, Action<Direction[,]>? observer = null)
     {
         observer ??= _ => { };
         
-        var map = new int[height, width];
+        var map = new Direction[height, width];
         var random = new Random(Environment.TickCount);
         
-        void Walk(int cx, int cy)
+        void Walk(MapVector position)
         {
             foreach(var direction in Directions.All.OrderBy(_ => random.Next()).ToArray())
             {
-                var nextX = cx + Directions.X[direction];
-                var nextY = cy + Directions.Y[direction];
+                var next = position + Directions.Vector[direction];
                 var oppositeDirection = Directions.Opposite[direction];
-                if (nextX >= 0 && nextY >= 0 && nextX < width && nextY < height && map[nextY,nextX] == 0)
+                if (next.InBounds(width,height) && map[next.y,next.x] == 0)
                 {
-                    map[cy,cx] |= (int)direction;
-                    map[nextY, nextX] |= (int)oppositeDirection;
+                    map[position.y,position.x] |= direction;
+                    map[next.y, next.x] |= oppositeDirection;
                     observer(map);
-                    Walk(nextX, nextY);
+                    Walk(next);
                 }
             }
         }
         
-        Walk(0,0);
+        Walk(MapVector.Zero);
 
         return map;
     }

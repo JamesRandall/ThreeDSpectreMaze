@@ -43,7 +43,7 @@ public static class Renderer
 
     public static void RenderOverhead(
         Canvas canvas,
-        IntVector2 playerPosition,
+        MapVector playerPosition,
         ImmutableArray<ImmutableArray<Block>> map)
     {
         DrawRectangle(canvas, 0,0,canvas.Width-1,canvas.Height-1,Color.Black);

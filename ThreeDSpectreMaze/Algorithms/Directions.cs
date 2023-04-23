@@ -24,7 +24,16 @@ public static class Directions
             {Direction.S, 1},
             {Direction.W, 0}
         }.ToImmutableDictionary();
-    
+
+    public static readonly ImmutableDictionary<Direction, MapVector> Vector =
+        new Dictionary<Direction, MapVector>
+        {
+            {Direction.N, new MapVector(0,-1)},
+            {Direction.E, new MapVector(1,0)},
+            {Direction.S, new MapVector(0,1)},
+            {Direction.W, new MapVector(-1,0)}
+        }.ToImmutableDictionary();
+        
     public static readonly ImmutableDictionary<Direction, Direction> Opposite =
         new Dictionary<Direction, Direction>
         {

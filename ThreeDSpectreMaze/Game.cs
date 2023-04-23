@@ -9,6 +9,7 @@ public class Game
     private readonly ImmutableArray<ImmutableArray<Block>> _map;
     private readonly int _mapWidth;
     private readonly int _mapHeight;
+    private enum MovementDirection { Forwards = 1, Backwards = -1}
 
     public Game(ImmutableArray<ImmutableArray<Block>> map)
     {
@@ -18,19 +19,18 @@ public class Game
         PlayerPosition = GetValidRandomPosition();
     }
     
-    private IntVector2 PlayerPosition { get; set; }
+    private MapVector PlayerPosition { get; set; }
 
     private Direction Facing { get; set; } = Direction.N;
 
-    private bool IsValidPosition(IntVector2 position) =>
-        position.x >= 0 && position.x < _mapWidth && position.y >= 0 && position.y < _mapHeight;
+    private bool IsValidPosition(MapVector position) => position.InBounds(_mapWidth, _mapHeight);
 
-    private IntVector2 GetValidRandomPosition()
+    private MapVector GetValidRandomPosition()
     {
         var random = new Random(Environment.TickCount);
-        IntVector2 GetRandomPosition()
+        MapVector GetRandomPosition()
         {
-            return new IntVector2(
+            return new MapVector(
                 random.Next(0, _mapWidth),
                 random.Next(0, _mapHeight)
             );
@@ -47,26 +47,26 @@ public class Game
     
     public ImmutableArray<ImmutableArray<Block>> GetPlayerView()
     {
-        var viewDirection = new IntVector2(Directions.X[Facing], Directions.Y[Facing]);
+        var viewDirection = Directions.Vector[Facing];// new MapVector(Directions.X[Facing], Directions.Y[Facing]);
         // As we build up the view for the player we need to look at the cells to the left and right of them
         // and the vector for this is based on the direction they are facing
-        (IntVector2 left, IntVector2 right) viewConeOffsets = Facing switch
+        (MapVector left, MapVector right) viewConeOffsets = Facing switch
         {
             Direction.N => (
-                new IntVector2(Directions.X[Direction.W], 0),
-                new IntVector2(Directions.X[Direction.E], 0)
+                new MapVector(Directions.X[Direction.W], 0),
+                new MapVector(Directions.X[Direction.E], 0)
             ),
             Direction.E => (
-                new IntVector2(0,Directions.Y[Direction.N]),
-                new IntVector2(0,Directions.Y[Direction.S])
+                new MapVector(0,Directions.Y[Direction.N]),
+                new MapVector(0,Directions.Y[Direction.S])
             ),
             Direction.S => (
-                new IntVector2(Directions.X[Direction.E], 0),
-                new IntVector2(Directions.X[Direction.W], 0)
+                new MapVector(Directions.X[Direction.E], 0),
+                new MapVector(Directions.X[Direction.W], 0)
             ),
             Direction.W => (
-                new IntVector2(0,Directions.Y[Direction.S]),
-                new IntVector2(0,Directions.Y[Direction.N])
+                new MapVector(0,Directions.Y[Direction.S]),
+                new MapVector(0,Directions.Y[Direction.N])
             )
         };
 
@@ -88,9 +88,9 @@ public class Game
         return view.Select(row => row.ToImmutableArray()).ToImmutableArray();
     }
 
-    private void Move(int direction)
+    private void Move(MovementDirection direction)
     {
-        var directionVector = new IntVector2(Directions.X[Facing], Directions.Y[Facing]) * direction;
+        var directionVector = new MapVector(Directions.X[Facing], Directions.Y[Facing]) * (int)direction;
         var newPosition = PlayerPosition + directionVector;
         if (IsValidPosition(newPosition) && _map[newPosition.y][newPosition.x] == Block.Empty)
         {
@@ -144,8 +144,8 @@ public class Game
                 var key = Console.ReadKey().Key;
                 switch (key)
                 {
-                    case ConsoleKey.UpArrow: Move(1); break;
-                    case ConsoleKey.DownArrow: Move(-1); break;
+                    case ConsoleKey.UpArrow: Move(MovementDirection.Forwards); break;
+                    case ConsoleKey.DownArrow: Move(MovementDirection.Backwards); break;
                     case ConsoleKey.LeftArrow: RotateLeft(); break;
                     case ConsoleKey.RightArrow: RotateRight(); break;
                     case ConsoleKey.M: isOverhead = !isOverhead; break;
