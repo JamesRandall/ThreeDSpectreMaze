@@ -10,14 +10,16 @@ public static class MapFactory
     const int Width = 17;
     const int Height = 17;
     
-    public static ImmutableArray<ImmutableArray<Block>> Create(Func<int, int, int[,]> algorithm)
+    public static ImmutableArray<ImmutableArray<Block>> Create(
+        Func<int, int, Action<int[,]>?, int[,]> algorithm,
+        Action<int[,]>? observer = null)
     {
-        var directionalMap = algorithm(Width, Height);
+        var directionalMap = algorithm(Width, Height, observer);
         var gridMap = TransformToGrid(directionalMap);
         return gridMap;
     }
     
-    private static ImmutableArray<ImmutableArray<Block>> TransformToGrid(int[,] map)
+    public static ImmutableArray<ImmutableArray<Block>> TransformToGrid(int[,] map)
     {
         var topRow = Enumerable.Repeat(Block.Solid, Width * 2 + 1).ToList();
         var rows = new List<List<Block>>();

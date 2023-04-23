@@ -5,6 +5,9 @@ namespace ThreeDSpectreMaze;
 
 public static class Renderer
 {
+    public const int CanvasWidth = 50;
+    public const int CanvasHeight = 48;
+    
     private static void DrawVerticalLine(Canvas canvas, int column, Color color)
     {
         (column < canvas.Width / 2
@@ -38,7 +41,9 @@ public static class Renderer
     private static readonly Color BackgroundColor = new Color(224, 224, 224);
     private static readonly Color HorizontalWallColor = new Color(128, 128, 128);
 
-    public static void RenderOverhead(Canvas canvas, IntVector2 playerPosition,
+    public static void RenderOverhead(
+        Canvas canvas,
+        IntVector2 playerPosition,
         ImmutableArray<ImmutableArray<Block>> map)
     {
         DrawRectangle(canvas, 0,0,canvas.Width-1,canvas.Height-1,Color.Black);

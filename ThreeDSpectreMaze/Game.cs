@@ -124,7 +124,7 @@ public class Game
 
     public void Run()
     {
-        var canvas = new Canvas(50, 48);
+        var canvas = new Canvas(Renderer.CanvasWidth, Renderer.CanvasHeight);
         var isOverhead = false;
         AnsiConsole.Live(canvas).Start(ctx =>
         {
