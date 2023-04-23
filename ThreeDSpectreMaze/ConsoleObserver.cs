@@ -5,11 +5,10 @@ namespace ThreeDSpectreMaze;
 
 public static class ConsoleObserver
 {
-    public static ImmutableArray<ImmutableArray<Block>> ObserveCreation(
+    public static ImmutableArray<ImmutableArray<Block>> ObserveCreation(Canvas canvas,
         Func<int, int, Action<Direction[,]>?, Direction[,]> algorithm)
     {
         var map = ImmutableArray<ImmutableArray<Block>>.Empty;
-        var canvas = new Canvas(Renderer.CanvasWidth, Renderer.CanvasHeight);
         var quit = false;
         AnsiConsole.Live(canvas).Start(ctx =>
         {

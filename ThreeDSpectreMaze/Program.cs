@@ -2,6 +2,10 @@
 using ThreeDSpectreMaze;
 using ThreeDSpectreMaze.Algorithms;
 
+var canvas = new Canvas(Renderer.CanvasWidth, Renderer.CanvasHeight);
+TitleScreen.Show(canvas);
+AnsiConsole.Clear();
+
 var algorithms = new Dictionary<string, Func<int, int, Action<Direction[,]>?, Direction[,]>>
 {
     {"Recursive back tracking", RecursiveBackTracking.Algorithm},
@@ -27,8 +31,8 @@ AnsiConsole.Clear();
 
 var map =
     observe == "Yes"
-        ? ConsoleObserver.ObserveCreation(algorithm)
+        ? ConsoleObserver.ObserveCreation(canvas, algorithm)
         : MapFactory.Create(algorithm);
 
 var game = new Game(map);
-game.Run();
+game.Run(canvas);

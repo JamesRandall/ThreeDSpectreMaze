@@ -16,11 +16,11 @@ public static class Renderer
         ).ForEach(y => canvas.SetPixel(column, y, color));
     }
 
-    private static void DrawRectangle(Canvas canvas, int x, int y, int width, int height, Color color)
+    public static void DrawRectangle(Canvas canvas, int x, int y, int width, int height, Color color)
     {
-        for(var cx = x; cx <= x + width; cx++)
+        for(var cx = x; cx < x + width; cx++)
         {
-            for(var cy = y; cy <= y + height; cy++)
+            for(var cy = y; cy < y + height; cy++)
             {
                 canvas.SetPixel(cx,cy,color);
             }
@@ -46,7 +46,7 @@ public static class Renderer
         MapVector playerPosition,
         ImmutableArray<ImmutableArray<Block>> map)
     {
-        DrawRectangle(canvas, 0,0,canvas.Width-1,canvas.Height-1,Color.Black);
+        DrawRectangle(canvas, 0,0,canvas.Width,canvas.Height,Color.Black);
         for (var y = 0; y < map.Length; y++)
         {
             var row = map[y];
@@ -70,7 +70,7 @@ public static class Renderer
         const int playerMiddle = 1;
         const int playerRight = 2;
         
-        DrawRectangle(canvas, 0,0,canvas.Width-1,canvas.Height-1,BackgroundColor);
+        DrawRectangle(canvas, 0,0,canvas.Width,canvas.Height,BackgroundColor);
         for (var depth = 0; depth < playerView.Length; depth++)
         {
             var row = playerView[depth];
@@ -91,8 +91,8 @@ public static class Renderer
                     canvas,
                     startOffset,
                     startOffset,
-                    (canvas.Width - startOffset * 2 - 1),
-                    (canvas.Height - startOffset * 2 - 1),
+                    (canvas.Width - startOffset * 2),
+                    (canvas.Height - startOffset * 2),
                     HorizontalWallColor
                 );
             }
@@ -102,8 +102,8 @@ public static class Renderer
                     canvas,
                     startOffset,
                     (endOffset+1),
-                    (endOffset-startOffset),
-                    (canvas.Height - endOffset * 2 - 3),
+                    (endOffset-startOffset+1),
+                    (canvas.Height - endOffset * 2 - 2),
                     HorizontalWallColor
                 );
             }
@@ -114,8 +114,8 @@ public static class Renderer
                     canvas,
                     (canvas.Width-startOffset-wallWidth-1),
                     (endOffset+1),
-                    wallWidth,
-                    (canvas.Height-endOffset*2-3),
+                    wallWidth+1,
+                    (canvas.Height-endOffset*2-2),
                     HorizontalWallColor
                 );
             }

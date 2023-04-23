@@ -44,8 +44,8 @@ public class Game
 
         return position;
     }
-    
-    public ImmutableArray<ImmutableArray<Block>> GetPlayerView()
+
+    private ImmutableArray<ImmutableArray<Block>> GetPlayerView()
     {
         var viewDirection = Directions.Vector[Facing];// new MapVector(Directions.X[Facing], Directions.Y[Facing]);
         // As we build up the view for the player we need to look at the cells to the left and right of them
@@ -67,7 +67,8 @@ public class Game
             Direction.W => (
                 new MapVector(0,Directions.Y[Direction.S]),
                 new MapVector(0,Directions.Y[Direction.N])
-            )
+            ),
+            _ => (MapVector.Zero, MapVector.Zero)
         };
 
         var view = new Block[Renderer.DrawDepth][];
@@ -122,9 +123,8 @@ public class Game
         };
     }
 
-    public void Run()
+    public void Run(Canvas canvas)
     {
-        var canvas = new Canvas(Renderer.CanvasWidth, Renderer.CanvasHeight);
         var isOverhead = false;
         AnsiConsole.Live(canvas).Start(ctx =>
         {
