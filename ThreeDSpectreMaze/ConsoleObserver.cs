@@ -19,7 +19,7 @@ public static class ConsoleObserver
                     var inProgressMap = MapFactory.TransformToGrid(mapInProgress);
                     Renderer.RenderOverhead(canvas, new MapVector(-1, -1), inProgressMap);
                     ctx.Refresh();
-                    Thread.Sleep(50);
+                    Thread.Sleep(25);
                     while (Console.KeyAvailable)
                     {
                         quit |= Console.ReadKey().Key == ConsoleKey.Escape;
