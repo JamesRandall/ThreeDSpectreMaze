@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+      <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\ThreeDSpectreMaze\Algorithms\HuntAndKill.cs">
+        <Link>Algorithms\HuntAndKill.cs</Link>
+      </Compile>
+      <Compile Include="..\ThreeDSpectreMaze\Algorithms\RecursiveBackTracking.cs">
+        <Link>Algorithms\RecursiveBackTracking.cs</Link>
+      </Compile>
+      <Compile Include="..\ThreeDSpectreMaze\Direction.cs">
+        <Link>Direction.cs</Link>
+      </Compile>
+      <Compile Include="..\ThreeDSpectreMaze\Directions.cs">
+        <Link>Directions.cs</Link>
+      </Compile>
+      <Compile Include="..\ThreeDSpectreMaze\MapVector.cs">
+        <Link>MapVector.cs</Link>
+      </Compile>
+    </ItemGroup>
+
+</Project>

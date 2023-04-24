@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreeDSpectreMaze", "ThreeDSpectreMaze\ThreeDSpectreMaze.csproj", "{12712604-1E71-4889-A7BA-8131ADFB0BDE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MazeGenerationAnimationGenerator", "MazeGenerationAnimationGenerator\MazeGenerationAnimationGenerator.csproj", "{1154725E-AD54-4450-B871-2182AFD51857}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{12712604-1E71-4889-A7BA-8131ADFB0BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12712604-1E71-4889-A7BA-8131ADFB0BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12712604-1E71-4889-A7BA-8131ADFB0BDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1154725E-AD54-4450-B871-2182AFD51857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1154725E-AD54-4450-B871-2182AFD51857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1154725E-AD54-4450-B871-2182AFD51857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1154725E-AD54-4450-B871-2182AFD51857}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

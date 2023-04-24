@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace ThreeDSpectreMaze.Algorithms;
 
 public static class HuntAndKill
@@ -7,10 +9,16 @@ public static class HuntAndKill
         Touched,
         Untouched
     };
-    
-    public static Direction[,] Algorithm(int width, int height, Action<Direction[,]>? observer = null)
+
+    public static Direction[,] Algorithm(int width, int height,
+        Action<Direction[,]>? observer = null)
     {
-        observer ??= (_ => { });
+        return Algorithm(width, height, (map, _) => observer(map));
+    }
+    
+    public static Direction[,] Algorithm(int width, int height, Action<Direction[,], ImmutableList<MapVector>>? observer = null)
+    {
+        observer ??= (_,_) => { };
         
         var map = new Direction[height, width];
         var random = new Random(Environment.TickCount);
@@ -47,7 +55,7 @@ public static class HuntAndKill
                             var oppositeDirection = Directions.Opposite[direction];
                             map[position.y, position.x] |= direction;
                             map[nextPosition.y, nextPosition.x] |= oppositeDirection;
-                            observer(map);
+                            observer(map, ImmutableList<MapVector>.Empty);
                             return position;
                         }
                     }
@@ -68,7 +76,7 @@ public static class HuntAndKill
                 var oppositeDirection = Directions.Opposite[direction];
                 map[position.y, position.x] |= direction;
                 map[nextPosition.y, nextPosition.x] |= oppositeDirection;
-                observer(map);
+                observer(map, ImmutableList<MapVector>.Empty);
                 return nextPosition;
             }
 

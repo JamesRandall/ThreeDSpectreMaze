@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using System.Collections.Immutable;
+using Spectre.Console;
 using ThreeDSpectreMaze;
 using ThreeDSpectreMaze.Algorithms;
 
