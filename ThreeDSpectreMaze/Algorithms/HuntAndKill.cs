@@ -38,6 +38,15 @@ public static class HuntAndKill
             return possibleDirections;
         }
 
+        MapVector UpdateMap(MapVector mapVector, Direction direction1)
+        {
+            var nextPosition = mapVector + Directions.Vector[direction1];
+            var oppositeDirection = Directions.Opposite[direction1];
+            map[mapVector.y, mapVector.x] |= direction1;
+            map[nextPosition.y, nextPosition.x] |= oppositeDirection;
+            return nextPosition;
+        }
+
         MapVector Hunt()
         {
             for (var mapY = 0; mapY < height; mapY++)
@@ -51,10 +60,7 @@ public static class HuntAndKill
                     if (possibleDirections.Any())
                     {
                         var direction = possibleDirections.MinBy(_ => random.Next());
-                        var nextPosition = position + Directions.Vector[direction];
-                        var oppositeDirection = Directions.Opposite[direction];
-                        map[position.y, position.x] |= direction;
-                        map[nextPosition.y, nextPosition.x] |= oppositeDirection;
+                        UpdateMap(position, direction);
                         return position;
                     }
                     
@@ -71,11 +77,7 @@ public static class HuntAndKill
             if (possibleDirections.Any())
             {
                 var direction = possibleDirections.MinBy(_ => random.Next());
-                var nextPosition = position + Directions.Vector[direction];
-                var oppositeDirection = Directions.Opposite[direction];
-                map[position.y, position.x] |= direction;
-                map[nextPosition.y, nextPosition.x] |= oppositeDirection;
-                return nextPosition;
+                return UpdateMap(position, direction);
             }
 
             return MapVector.Invalid;
