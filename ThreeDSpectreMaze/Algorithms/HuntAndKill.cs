@@ -44,21 +44,20 @@ public static class HuntAndKill
             {
                 for (var mapX = 0; mapX < width; mapX++)
                 {
-                    if (map[mapY, mapX] == 0)
+                    if (map[mapY, mapX] != Direction.None) continue;
+                    
+                    var position = new MapVector(mapX, mapY);
+                    var possibleDirections = GetPossibleDirections(position, LookingFor.Touched);
+                    if (possibleDirections.Any())
                     {
-                        var position = new MapVector(mapX, mapY);
-                        var possibleDirections = GetPossibleDirections(position, LookingFor.Touched);
-                        if (possibleDirections.Any())
-                        {
-                            var direction = possibleDirections.MinBy(_ => random.Next());
-                            var nextPosition = position + Directions.Vector[direction];
-                            var oppositeDirection = Directions.Opposite[direction];
-                            map[position.y, position.x] |= direction;
-                            map[nextPosition.y, nextPosition.x] |= oppositeDirection;
-                            observer(map, ImmutableList<MapVector>.Empty);
-                            return position;
-                        }
+                        var direction = possibleDirections.MinBy(_ => random.Next());
+                        var nextPosition = position + Directions.Vector[direction];
+                        var oppositeDirection = Directions.Opposite[direction];
+                        map[position.y, position.x] |= direction;
+                        map[nextPosition.y, nextPosition.x] |= oppositeDirection;
+                        return position;
                     }
+                    
                 }
             }
 
@@ -76,7 +75,6 @@ public static class HuntAndKill
                 var oppositeDirection = Directions.Opposite[direction];
                 map[position.y, position.x] |= direction;
                 map[nextPosition.y, nextPosition.x] |= oppositeDirection;
-                observer(map, ImmutableList<MapVector>.Empty);
                 return nextPosition;
             }
 
@@ -86,6 +84,7 @@ public static class HuntAndKill
         var position = new MapVector(random.Next(width), random.Next(height));
         while (position.IsValid)
         {
+            observer(map, ImmutableList<MapVector>.Empty);
             position = Walk(position);
             if (!position.IsValid) position = Hunt();
         }

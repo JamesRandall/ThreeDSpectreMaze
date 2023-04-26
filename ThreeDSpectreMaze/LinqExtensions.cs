@@ -9,14 +9,4 @@ public static class LinqExtensions
             action(item);
         }
     }
-    
-    public static void ForEachI<T>(this IEnumerable<T> enumeration, Action<int,T> action)
-    {
-        var index = 0;
-        foreach(T item in enumeration)
-        {
-            action(index, item);
-            index++;
-        }
-    }
 }
