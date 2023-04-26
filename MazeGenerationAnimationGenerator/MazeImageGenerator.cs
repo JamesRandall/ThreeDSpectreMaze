@@ -5,8 +5,29 @@ namespace ThreeDSpectreMaze;
 
 public static class MazeImageGenerator
 {
-    public static Image<Rgba32> GenerateImage(Direction[,] map, ImmutableList<MapVector> path, int frameNumber,
-        int imageWidth, int imageHeight, string outputFolder)
+    private static readonly Color VisitedCellColor = Color.White;
+    private static readonly Color PathTipColor = Color.LightBlue;
+    private static readonly Color GridLineColor = Color.Black;
+    private static readonly Color UnvisitedCellColor = Color.DarkGrey;
+    private static readonly Color PathColor = Color.SkyBlue;
+    
+    public static ImmutableArray<Color> Palette = new []
+    {
+        PathTipColor,
+        PathColor,
+        VisitedCellColor,
+        GridLineColor,
+        UnvisitedCellColor,
+        // The below color is needed due to the compression of the gif, without it you get some unfortunate artifacts
+        // from the other colors, with it the artifact lands in an unnoticeable place.
+        Color.FromRgb(47, 79, 79)
+    }.ToImmutableArray();
+
+    public static Image<Rgba32> GenerateImage(
+        Direction[,] map,
+        ImmutableList<MapVector> path,
+        int imageWidth,
+        int imageHeight)
     {
         var mazeHeight = map.GetLength(0);
         var mazeWidth = map.GetLength(1);
@@ -24,8 +45,8 @@ public static class MazeImageGenerator
                 
                 var backgroundColor =
                     path.Any(mv => mv.x == x && mv.y == y)
-                        ? path.Last().x == x && path.Last().y == y ? Color.LightBlue : Color.SkyBlue
-                        : cell == Direction.None ? Color.DarkGrey : Color.White;
+                        ? path.Last().x == x && path.Last().y == y ? PathTipColor : PathColor
+                        : cell == Direction.None ? UnvisitedCellColor : VisitedCellColor;
                 
                 image.Mutate(x =>
                     {
@@ -38,7 +59,7 @@ public static class MazeImageGenerator
                 {
                     image.Mutate(x => 
                         x.DrawLines(
-                            Color.Black, 
+                            GridLineColor, 
                             1,
                             new PointF(cellX, cellY),
                             new PointF(cellX + cellWidth, cellY)
@@ -49,7 +70,7 @@ public static class MazeImageGenerator
                 {
                     image.Mutate(x =>
                         x.DrawLines(
-                            Color.Black, 
+                            GridLineColor, 
                             1,
                             new PointF(cellX, cellY),
                             new PointF(cellX, cellY + cellHeight)
@@ -60,7 +81,7 @@ public static class MazeImageGenerator
         }
         image.Mutate(x =>
             {
-                x.Draw(Color.Black, 1, new RectangleF(0, 0, imageWidth, imageHeight));
+                x.Draw(GridLineColor, 1, new RectangleF(0, 0, imageWidth, imageHeight));
             }
         );
         return image;
