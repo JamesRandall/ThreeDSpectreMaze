@@ -6,6 +6,7 @@ public static class RecursiveBackTracking
 {
     public static Direction[,] Algorithm(int width, int height, Action<Direction[,]>? observer = null)
     {
+        observer ??= _ => { };
         return Algorithm(false, width, height, (map,path) => observer(map));
     }
     

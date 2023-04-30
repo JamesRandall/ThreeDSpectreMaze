@@ -27,9 +27,9 @@ public static class Renderer
         }
     }
     
-    private static readonly ImmutableArray<(int offset, Color color)> Walls = new []
+    private static readonly ImmutableArray<(int depth, Color color)> Walls = new []
     {
-        (2, Color.Black),
+        (2, Color.Black), // walls alongside the player - they can just see the edge of them
         (8, Color.Black),
         (6, new Color(32, 32, 32)),
         (4, new Color(48, 48, 48)),
@@ -64,64 +64,79 @@ public static class Renderer
         }
     }
     
+    private const int PlayerLeft = 0;
+    private const int PlayerMiddle = 1;
+    private const int PlayerRight = 2;
+    
     public static void Render(Canvas canvas, ImmutableArray<ImmutableArray<Block>> playerView)
     {
-        const int playerLeft = 0;
-        const int playerMiddle = 1;
-        const int playerRight = 2;
-        
         DrawRectangle(canvas, 0,0,canvas.Width,canvas.Height,BackgroundColor);
         for (var depth = 0; depth < playerView.Length; depth++)
         {
             var row = playerView[depth];
-            var startOffset = Walls.Take(depth).Sum(f => f.offset);
-            var endOffset = startOffset + Walls[depth].offset - 1;
+            var startOffset = Walls.Take(depth).Sum(f => f.depth);
+            var endOffset = startOffset + Walls[depth].depth - 1;
             var color = Walls[depth].color;
-
-            // Draw side walls
-            for (var drawOffset = startOffset; drawOffset <= endOffset; drawOffset++)
-            {
-                if (row[playerLeft] == Block.Solid) DrawVerticalLine(canvas, drawOffset, color);
-                if (row[playerRight] == Block.Solid) DrawVerticalLine(canvas, canvas.Width-drawOffset-1, color);
-            }
-            if (row[playerMiddle] == Block.Solid)
-            {
-                // Draw horizontal wall
-                DrawRectangle(
-                    canvas,
-                    startOffset,
-                    startOffset,
-                    (canvas.Width - startOffset * 2),
-                    (canvas.Height - startOffset * 2),
-                    HorizontalWallColor
-                );
-            }
-            if (row[playerLeft] == Block.Empty)
-            {
-                DrawRectangle(
-                    canvas,
-                    startOffset,
-                    (endOffset+1),
-                    (endOffset-startOffset+1),
-                    (canvas.Height - endOffset * 2 - 2),
-                    HorizontalWallColor
-                );
-            }
-            if (row[playerRight] == Block.Empty)
-            {
-                var wallWidth = (endOffset - startOffset);
-                DrawRectangle(
-                    canvas,
-                    (canvas.Width-startOffset-wallWidth-1),
-                    (endOffset+1),
-                    wallWidth+1,
-                    (canvas.Height-endOffset*2-2),
-                    HorizontalWallColor
-                );
-            }
+            
+            DrawSidewalls(canvas, startOffset, endOffset, row, color);
+            DrawFacingWalls(canvas, row, startOffset, endOffset);
 
             // Stop drawing if their is a block in front of us
-            if (row[playerMiddle] == Block.Solid) break;
+            if (row[PlayerMiddle] == Block.Solid) break;
+        }
+    }
+
+    private static void DrawFacingWalls(Canvas canvas, ImmutableArray<Block> row, int startOffset,
+        int endOffset)
+    {
+        if (row[PlayerMiddle] == Block.Solid)
+        {
+            // Draw facing wall
+            DrawRectangle(
+                canvas,
+                startOffset,
+                startOffset,
+                (canvas.Width - startOffset * 2),
+                (canvas.Height - startOffset * 2),
+                HorizontalWallColor
+            );
+        }
+
+        if (row[PlayerLeft] == Block.Empty)
+        {
+            // Drawing facing wall of corridor to the left
+            DrawRectangle(
+                canvas,
+                startOffset,
+                (endOffset + 1),
+                (endOffset - startOffset + 1),
+                (canvas.Height - endOffset * 2 - 2),
+                HorizontalWallColor
+            );
+        }
+
+        if (row[PlayerRight] == Block.Empty)
+        {
+            // Draw facing wall of corridor to the right
+            var wallWidth = (endOffset - startOffset);
+            DrawRectangle(
+                canvas,
+                (canvas.Width - startOffset - wallWidth - 1),
+                (endOffset + 1),
+                wallWidth + 1,
+                (canvas.Height - endOffset * 2 - 2),
+                HorizontalWallColor
+            );
+        }
+    }
+
+    private static void DrawSidewalls(Canvas canvas, int startOffset, int endOffset, ImmutableArray<Block> row, 
+        Color color)
+    {
+        for (var drawOffset = startOffset; drawOffset <= endOffset; drawOffset++)
+        {
+            if (row[PlayerLeft] == Block.Solid) DrawVerticalLine(canvas, drawOffset, color);
+            if (row[PlayerRight] == Block.Solid) DrawVerticalLine(canvas, canvas.Width - drawOffset - 1, color);
         }
     }
 }

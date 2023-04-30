@@ -13,6 +13,7 @@ public static class HuntAndKill
     public static Direction[,] Algorithm(int width, int height,
         Action<Direction[,]>? observer = null)
     {
+        observer ??= _ => { };
         return Algorithm(width, height, (map, _) => observer(map));
     }
     
@@ -38,11 +39,11 @@ public static class HuntAndKill
             return possibleDirections;
         }
 
-        MapVector UpdateMap(MapVector mapVector, Direction direction1)
+        MapVector UpdateMap(MapVector mapVector, Direction direction)
         {
-            var nextPosition = mapVector + Directions.Vector[direction1];
-            var oppositeDirection = Directions.Opposite[direction1];
-            map[mapVector.y, mapVector.x] |= direction1;
+            var nextPosition = mapVector + Directions.Vector[direction];
+            var oppositeDirection = Directions.Opposite[direction];
+            map[mapVector.y, mapVector.x] |= direction;
             map[nextPosition.y, nextPosition.x] |= oppositeDirection;
             return nextPosition;
         }

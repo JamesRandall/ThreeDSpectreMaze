@@ -31,7 +31,7 @@ public static class TitleScreen
                 }
 
                 ctx.Refresh();
-                ConsoleExtensions.TryWaitReadKey(2000, out var _);
+                ConsoleExtensions.TryWaitReadKey(2000, out _);
             }
         );
     }

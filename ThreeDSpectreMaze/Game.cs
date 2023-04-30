@@ -47,36 +47,17 @@ public class Game
 
     private ImmutableArray<ImmutableArray<Block>> GetPlayerView()
     {
-        var viewDirection = Directions.Vector[Facing];// new MapVector(Directions.X[Facing], Directions.Y[Facing]);
+        var viewDirection = Directions.Vector[Facing];
         // As we build up the view for the player we need to look at the cells to the left and right of them
         // and the vector for this is based on the direction they are facing
-        (MapVector left, MapVector right) viewConeOffsets = Facing switch
-        {
-            Direction.N => (
-                new MapVector(Directions.X[Direction.W], 0),
-                new MapVector(Directions.X[Direction.E], 0)
-            ),
-            Direction.E => (
-                new MapVector(0,Directions.Y[Direction.N]),
-                new MapVector(0,Directions.Y[Direction.S])
-            ),
-            Direction.S => (
-                new MapVector(Directions.X[Direction.E], 0),
-                new MapVector(Directions.X[Direction.W], 0)
-            ),
-            Direction.W => (
-                new MapVector(0,Directions.Y[Direction.S]),
-                new MapVector(0,Directions.Y[Direction.N])
-            ),
-            _ => (MapVector.Zero, MapVector.Zero)
-        };
+        var strafeDirection = GetPlayerLeftAndRightOffsets();
 
         var view = new Block[Renderer.DrawDepth][];
         var position = PlayerPosition;
         for (var depth = 0; depth < Renderer.DrawDepth; depth++)
         {
-            var leftPosition = position + viewConeOffsets.left;
-            var rightPosition = position + viewConeOffsets.right;
+            var leftPosition = position + strafeDirection.left;
+            var rightPosition = position + strafeDirection.right;
             view[depth] = new[]
             {
                 IsValidPosition(leftPosition) ? _map[leftPosition.y][leftPosition.x] : Block.Solid,
@@ -87,6 +68,31 @@ public class Game
         }
 
         return view.Select(row => row.ToImmutableArray()).ToImmutableArray();
+    }
+
+    private (MapVector left, MapVector right) GetPlayerLeftAndRightOffsets()
+    {
+        (MapVector left, MapVector right) viewConeOffsets = Facing switch
+        {
+            Direction.N => (
+                Directions.Vector[Direction.W],
+                Directions.Vector[Direction.E]
+            ),
+            Direction.E => (
+                Directions.Vector[Direction.N],
+                Directions.Vector[Direction.S]
+            ),
+            Direction.S => (
+                Directions.Vector[Direction.E],
+                Directions.Vector[Direction.W]
+            ),
+            Direction.W => (
+                Directions.Vector[Direction.S],
+                Directions.Vector[Direction.N]
+            ),
+            _ => (MapVector.Zero, MapVector.Zero)
+        };
+        return viewConeOffsets;
     }
 
     private void Move(MovementDirection direction)
